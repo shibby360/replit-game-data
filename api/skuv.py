@@ -1,6 +1,5 @@
 from flask import Flask, request
 import json
-from replit import db
 app = Flask('app')
 print(dict(db))
 def addkeytoall(key, val):

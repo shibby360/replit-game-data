@@ -86,5 +86,3 @@ def attackname():
   del newdc['password']
   newdc['uid'] = randomid
   return newdc
-
-app.run(host='0.0.0.0', port=8080)
