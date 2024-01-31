@@ -1,6 +1,6 @@
-from flask import Flask
+from flask import Flask, request
 import skuv
-print(skuv)
+
 app = Flask('app')
 
 @app.route('/')
