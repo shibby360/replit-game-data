@@ -1,6 +1,7 @@
 import re
 import string
 import json, random as rand
+import os
 class idgen:
   def gen(debug=False):
     end = ''
