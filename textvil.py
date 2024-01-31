@@ -1,7 +1,8 @@
-import re
 import string
 import json, random as rand
 import os
+import pymongo
+from bson.objectid import ObjectId
 class idgen:
   def gen(debug=False):
     end = ''
