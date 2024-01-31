@@ -18,11 +18,7 @@ def addkeytoall(key, val):
     db[i][key] = val
 def save():
   data.update_one({'_id':objid}, {'$set':db})
-  
-def hello_world():
-  return 'Hello, World!'
-  
-# @app.route('/save', methods=['POST'])
+
 def savepost(request):
   userdata = json.loads(request.form['userdata'])
   userid = request.args['userid'][::-1]
@@ -30,7 +26,6 @@ def savepost(request):
   save()
   return 'saved'
 
-# @app.route('/getdata', methods=['GET'])
 def getdata(request):
   enddb = {}
   for key in dict(db):

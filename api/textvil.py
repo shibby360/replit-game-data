@@ -1,5 +1,4 @@
 import re
-from flask import Flask, request
 import string
 import json, random as rand
 class idgen:
@@ -13,27 +12,25 @@ class idgen:
     if not debug:
       db['ids'].append(end)
     return end
+if os.path.isfile('mongouri.txt'):
+  connectionstring = open('mongouri.txt').read().strip()
+else:
+  connectionstring = os.environ.get('MONGO_URI')
+cluster = pymongo.MongoClient(connectionstring)
+database = cluster['replit-text-games']
+data = database['text-vil']
+objid = ObjectId('65b9da692c4a8ee403f13743')
+doc = data.find_one({'_id':objid})
+del doc['_id']
+db = doc
 
-
-app = Flask('app')
 def addattr(attr, val):
   for i in db:
     if i == 'ids':
       continue
     db[i][attr] = val
 
-for i in db:
-  print(i, db.get_raw(i), sep=': ', end='\n\n')
-@app.route('/')
-def hello_world():
-  return 'Bonjour, le monde!'
-
-@app.route('/wakeup')
-def wakeup():
-  return 'im waking up'
-
-@app.route('/makeacc')
-def makeacc():
+def makeacc(request):
   uid = idgen.gen()
   bdgid = idgen.gen()
   db[uid] = {
@@ -43,10 +40,9 @@ def makeacc():
     'buildings':{bdgid:{'type':'village hall', 'level':1, 'x':0, 'y':0, 'dead':False}},
     'troops':{}
   }
-  return {uid:json.loads(db.get_raw(uid))}
+  return {uid:db[uid]}
 
-@app.route('/data', methods=['GET', 'POST'])
-def getdata():
+def getdata(request):
   unm = request.form['username']
   pwd = request.form['password']
   unms = []
@@ -54,35 +50,31 @@ def getdata():
     if i == 'ids':
       continue
     if db[i]['username'] == unm and db[i]['password'] == pwd:
-      return {i:json.loads(db.get_raw(i))}
+      return {i:db[i]}
   return {'msg':'incorrect'}
 
-@app.route('/save', methods=['POST'])
-def saveroute():
+def saveroute(request):
   uid = request.form['userid'][::-1]
   userdata = json.loads(request.form['userdata'])
   if 'password' not in userdata:
-    userdata['password'] = json.loads(db.get_raw(uid))['password']
+    userdata['password'] = db[uid]['password']
   # db[uid] = userdata
   print(userdata)
   return 'success'
 
-@app.route('/newid')
 def newid():
   uid = idgen.gen()
   return uid
 
-@app.route('/delid/<dlid>')
 def delid(dlid):
   db['ids'].remove(dlid)
   return 'success'
 
-@app.route('/attackname')
-def attackname():
+def attackname(request):
   randomid = rand.choice(list(db.keys()))
   while randomid == request.form['userfrom'] or randomid == 'ids':
     randomid = rand.choice(list(db.keys()))
-  newdc = json.loads(db.get_raw(randomid)).copy()
+  newdc = db[randomid].copy()
   del newdc['password']
   newdc['uid'] = randomid
   return newdc
