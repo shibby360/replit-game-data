@@ -1,5 +1,5 @@
 from flask import Flask, request
-import skuv
+skuv = __import__('skuv')
 import textvil
 
 app = Flask('app')
