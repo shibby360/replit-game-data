@@ -1,9 +1,7 @@
-from flask import Flask, request
 import pymongo
 from bson.objectid import ObjectId
 import json
 import os
-app = Flask('app')
 if os.path.isfile('mongouri.txt'):
   connectionstring = open('mongouri.txt').read().strip()
 else:
@@ -21,24 +19,19 @@ def addkeytoall(key, val):
 def save():
   data.update_one({'_id':objid}, {'$set':db})
   
-@app.route('/')
 def hello_world():
   return 'Hello, World!'
-
-@app.route('/alarmclockisgoingwakeup')
-def alarmclockisgoingwakeup():
-  return 'ok geez'
   
-@app.route('/save', methods=['POST'])
-def savepost():
+# @app.route('/save', methods=['POST'])
+def savepost(request):
   userdata = json.loads(request.form['userdata'])
   userid = request.args['userid'][::-1]
   db[userid] = userdata
   save()
   return 'saved'
 
-@app.route('/getdata', methods=['GET'])
-def getdata():
+# @app.route('/getdata', methods=['GET'])
+def getdata(request):
   enddb = {}
   for key in dict(db):
     enddb[key] = db[key]

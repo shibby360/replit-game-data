@@ -7,4 +7,13 @@ app = Flask('app')
 def hello_world():
   return 'Hello, World!'
 
-app.run(host='0.0.0.0', port=8080)
+@app.route('/skuv/save', methods=['POST'])
+def skuvsavepost():
+  return skuv.savepost(request)
+
+@app.route('/skuv/getdata', methods=['GET'])
+def skuvgetdata():
+  return skuv.getdata(request)
+
+if __name__ == '__main__':
+  app.run(host='0.0.0.0')
