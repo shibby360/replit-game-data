@@ -20,7 +20,7 @@ def skuvgetdata():
 @app.route('/text-vil/makeacc', methods=['GET'])
 def textvilmakeacc():
   return textvil.makeacc(request)
-@app.route('/text-vil/data', methods=['GET'])
+@app.route('/text-vil/data', methods=['GET', 'POST'])
 def textvilgetdata():
   return textvil.getdata(request)
 @app.route('/text-vil/save', methods=['POST'])
